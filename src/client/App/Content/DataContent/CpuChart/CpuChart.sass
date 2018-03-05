@@ -1,0 +1,34 @@
+#cpu-chart
+
+  $color1: #FFBA08
+  $color2: #157F1F
+  $color3: #3E92CC
+
+  &.empty
+    display: flex
+    align-items: center
+    justify-content: center
+
+    p
+      font-size: 1.5rem
+      cursor: default
+
+  g.legend
+
+    rect.busy
+      fill: $color1
+
+    rect.io
+      fill: $color2
+
+    rect.steal
+      fill: $color3
+
+  path.busy.area
+    fill: $color1
+
+  path.io.area
+    fill: $color2
+
+  path.steal.area
+    fill: $color3

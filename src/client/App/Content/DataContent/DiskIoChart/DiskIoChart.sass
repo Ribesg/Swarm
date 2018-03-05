@@ -1,0 +1,41 @@
+#disk-io-chart
+
+  $color1: #FFBA08
+  $color2: #157F1F
+  $color3: #3E92CC
+  $color4: #FE4A49
+
+  &.empty
+    display: flex
+    align-items: center
+    justify-content: center
+
+    p
+      font-size: 1.5rem
+      cursor: default
+
+  g.legend
+
+    rect.readUsage
+      fill: $color1
+
+    rect.writeUsage
+      fill: $color2
+
+    rect.readKB
+      fill: $color3
+
+    rect.writtenKB
+      fill: $color4
+
+  path.readUsage.area
+    fill: $color1
+
+  path.writeUsage.area
+    fill: $color2
+
+  path.readKB.line
+    stroke: $color3
+
+  path.writtenKB.line
+    stroke: $color4

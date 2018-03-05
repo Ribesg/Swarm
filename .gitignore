@@ -1,0 +1,25 @@
+# IntelliJ IDEA garbage
+/out/
+/.idea/*
+/*.iml
+
+# IntelliJ IDEA garbage we want to keep for convenience
+!/.idea/runConfigurations/
+
+# Maven garbage
+/target/
+/dependency-reduced-pom.xml
+
+# Local installations of NodeJS and Yarn
+/node
+
+# NodeJS garbage
+/node_modules
+
+# Prevent committing a file which is actually compiled
+/src/server/resources/static/index.html
+/src/server/resources/static/index.*.js
+/src/server/resources/static/index.*.css
+
+# Runtime garbage
+/*.db

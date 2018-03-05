@@ -1,0 +1,47 @@
+#content.data
+  flex-direction: column
+
+  .container
+    flex: 1
+    display: flex
+
+    > :not(.container)
+      flex: 1
+      display: flex
+      margin: .25rem
+      padding: .25rem
+      background-color: white
+
+      > div
+        flex: 1
+
+  .top.container, .bottom.container
+    flex-direction: row
+
+  .top.container
+    flex: 45
+
+  .bottom.container
+    flex: 55
+
+  .bottom-right.container
+    margin: .5rem
+    flex-direction: column
+
+    #disk-space-table
+      flex: unset
+      margin: -.25rem -.25rem .25rem -.25rem
+      padding: 0 0 .25rem 0
+
+    #net-chart
+      margin: .25rem -.25rem -.25rem -.25rem
+      padding: .25rem 0 0 0
+
+@media ("max-width: 80rem")
+  #content.data
+
+    .top.container, .bottom.container
+      flex-direction: column
+
+    .container > :not(.container):not(#disk-space-table)
+      height: 15rem

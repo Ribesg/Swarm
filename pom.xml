@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<prerequisites>
+		<maven>3.3.9</maven>
+	</prerequisites>
+
+	<groupId>fr.ribesg.swarm</groupId>
+	<artifactId>Swarm</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>Swarm</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<node.version>9.6.1</node.version>
+		<yarn.version>1.5.1</yarn.version>
+		<java.version>1.8</java.version>
+		<kotlin.version>1.2.30</kotlin.version>
+		<ktor.version>0.9.1</ktor.version>
+		<jackson.version>2.9.4</jackson.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>exposed</id>
+			<url>http://dl.bintray.com/kotlin/exposed</url>
+		</repository>
+		<repository>
+			<id>ktor</id>
+			<url>https://dl.bintray.com/kotlin/ktor/</url>
+		</repository>
+		<repository>
+			<id>kotlinx</id>
+			<url>http://dl.bintray.com/kotlin/kotlinx</url>
+		</repository>
+		<repository>
+			<id>jcenter</id>
+			<url>https://jcenter.bintray.com/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+
+		<!-- Kotlin Standard Library -->
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<version>${kotlin.version}</version>
+		</dependency>
+
+		<!-- Ktor Server -->
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-server-core</artifactId>
+			<version>${ktor.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-server-netty</artifactId>
+			<version>${ktor.version}</version>
+		</dependency>
+
+		<!-- Ktor Client -->
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-client-core</artifactId>
+			<version>${ktor.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-client-apache</artifactId>
+			<version>${ktor.version}</version>
+		</dependency>
+
+		<!-- Arguments Parser -->
+		<dependency>
+			<groupId>com.xenomachina</groupId>
+			<artifactId>kotlin-argparser</artifactId>
+			<version>2.0.4</version>
+		</dependency>
+
+		<!-- Jackson FasterXML with Kotlin support -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-kotlin</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
+		<!-- Apache Commons CSV -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.5</version>
+		</dependency>
+
+		<!-- Jetbrains' Exposed SQL Framework -->
+		<dependency>
+			<groupId>org.jetbrains.exposed</groupId>
+			<artifactId>exposed</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
+		<!-- H2 SQL Database -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.196</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vividsolutions</groupId>
+			<artifactId>jts</artifactId>
+			<version>1.13</version>
+		</dependency>
+
+		<!-- Slack WebHook -->
+		<dependency>
+			<groupId>in.ashwanthkumar</groupId>
+			<artifactId>slack-java-webhook</artifactId>
+			<version>0.0.9</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<defaultGoal>clean frontend:install-node-and-yarn frontend:yarn frontend:webpack@webpack-prod install
+		</defaultGoal>
+		<finalName>${project.name}</finalName>
+		<sourceDirectory>${project.basedir}/src/server/kotlin</sourceDirectory>
+
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/server/resources</directory>
+			</resource>
+		</resources>
+
+		<plugins>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<version>${kotlin.version}</version>
+				<configuration>
+					<jvmTarget>${java.version}</jvmTarget>
+					<args>
+						<arg>-Xcoroutines=enable</arg>
+					</args>
+				</configuration>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.6</version>
+				<configuration>
+					<nodeVersion>v${node.version}</nodeVersion>
+					<yarnVersion>v${yarn.version}</yarnVersion>
+				</configuration>
+				<executions>
+					<execution>
+						<id>install-node-and-yarn</id>
+						<goals>
+							<goal>install-node-and-yarn</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>yarn</id>
+						<goals>
+							<goal>yarn</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>webpack-dev</id>
+						<phase>none</phase>
+						<goals>
+							<goal>webpack</goal>
+						</goals>
+						<configuration>
+							<arguments>--config webpack.dev.js</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>webpack-prod</id>
+						<phase>none</phase>
+						<goals>
+							<goal>webpack</goal>
+						</goals>
+						<configuration>
+							<arguments>--config webpack.prod.js</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>**</include>
+								</includes>
+							</artifactSet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>${project.groupId}.MainKt</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+</project>

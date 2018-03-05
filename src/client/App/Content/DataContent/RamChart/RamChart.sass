@@ -1,0 +1,27 @@
+#ram-chart
+
+  $color1: #FFBA08
+  $color2: #157F1F
+
+  &.empty
+    display: flex
+    align-items: center
+    justify-content: center
+
+    p
+      font-size: 1.5rem
+      cursor: default
+
+  g.legend
+
+    rect.ram
+      fill: $color1
+
+    rect.swap
+      fill: $color2
+
+  path.ram.line
+    stroke: $color1
+
+  path.swap.line
+    stroke: $color2

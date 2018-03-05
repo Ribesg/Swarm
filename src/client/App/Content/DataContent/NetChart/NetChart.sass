@@ -1,0 +1,34 @@
+#net-chart
+
+  $color1: #FFBA08
+  $color2: #157F1F
+  $color3: #3E92CC
+
+  &.empty
+    display: flex
+    align-items: center
+    justify-content: center
+
+    p
+      font-size: 1.5rem
+      cursor: default
+
+  g.legend
+
+    rect.received
+      fill: $color1
+
+    rect.transmitted
+      fill: $color2
+
+    rect.errors
+      fill: $color3
+
+  path.received.line
+    stroke: $color1
+
+  path.transmitted.line
+    stroke: $color2
+
+  path.errors.line
+    stroke: $color3
