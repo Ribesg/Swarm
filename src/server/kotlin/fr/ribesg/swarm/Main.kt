@@ -7,11 +7,8 @@ import fr.ribesg.swarm.alerts.SlackAlertLogger
 import fr.ribesg.swarm.data.DataHandler
 import fr.ribesg.swarm.database.Database
 import fr.ribesg.swarm.extensions.stackTraceString
-import fr.ribesg.swarm.routes.DragonflyRoute
-import fr.ribesg.swarm.routes.app.*
-import fr.ribesg.swarm.routes.debug.*
+import fr.ribesg.swarm.routes.Routes
 import io.ktor.application.*
-import io.ktor.content.*
 import io.ktor.features.*
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
@@ -52,30 +49,7 @@ private fun initSlackLogger() {
 internal fun Application.swarm() {
     install(DefaultHeaders)
     install(CallLogging)
-    routing {
-
-        resource("/", "static/index.html")
-
-        static("/assets/") {
-            staticBasePackage = "static"
-            resources("/")
-        }
-
-        DragonflyRoute.setup(this)
-
-        HostsRoute.setup(this)
-        CpuDataRoute.setup(this)
-        RamDataRoute.setup(this)
-        NetDataRoute.setup(this)
-        DiskIoDataRoute.setup(this)
-        DiskSpaceDataRoute.setup(this)
-
-        HostRemoveRoute.setup(this)
-
-        DebugDataRoute.setup(this)
-        DebugVodRoute.setup(this)
-
-    }
+    routing(Routes)
 }
 
 private fun startServer() {
