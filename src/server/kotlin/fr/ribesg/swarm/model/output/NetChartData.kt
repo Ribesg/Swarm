@@ -1,6 +1,6 @@
 package fr.ribesg.swarm.model.output
 
-import fr.ribesg.swarm.extensions.letIfAnyOrNull
+import fr.ribesg.swarm.extensions.sumOrNull
 import fr.ribesg.swarm.model.output.OutputNetData.OutputNetDataPointValues
 
 class NetChartData(output: OutputNetData) : ShapeChartData(
@@ -10,7 +10,7 @@ class NetChartData(output: OutputNetData) : ShapeChartData(
             legend = "Received",
             points = output.data.map {
                 val inBytes = it.values.values.mapNotNull(OutputNetDataPointValues::inBytes)
-                Point(it.date, inBytes.letIfAnyOrNull(Iterable<Long>::sum))
+                Point(it.date, inBytes.sumOrNull())
             },
             shape = Shape.LINE,
             side = Side.LEFT
@@ -20,7 +20,7 @@ class NetChartData(output: OutputNetData) : ShapeChartData(
             legend = "Transmitted",
             points = output.data.map {
                 val outBytes = it.values.values.mapNotNull(OutputNetDataPointValues::outBytes)
-                Point(it.date, outBytes.letIfAnyOrNull(Iterable<Long>::sum))
+                Point(it.date, outBytes.sumOrNull())
             },
             shape = Shape.LINE,
             side = Side.LEFT
@@ -37,7 +37,7 @@ class NetChartData(output: OutputNetData) : ShapeChartData(
                 legend = "Errors",
                 points = output.data.map {
                     val errors = it.values.values.flatMap { listOf(it.inErrors, it.outErrors) }.filterNotNull()
-                    Point(it.date, errors.letIfAnyOrNull(Iterable<Long>::sum))
+                    Point(it.date, errors.sumOrNull())
                 },
                 shape = Shape.LINE,
                 side = Side.RIGHT

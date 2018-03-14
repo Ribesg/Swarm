@@ -2,19 +2,14 @@
 
 package fr.ribesg.swarm.extensions
 
-fun <T> List<T>.batched(batchSize: Int): List<List<T>> {
-    check(batchSize > 0) { "Invalid value for parameter 'batchSize': $batchSize (should be greater than 0)" }
-    return if (batchSize >= size) {
-        listOf(this)
-    } else {
-        List((size + batchSize - 1) / batchSize) { i ->
-            subList(i * batchSize, ((i + 1) * batchSize).coerceAtMost(size))
-        }
-    }
-}
+/**
+ * Returns the sum of all elements in the collection, or null if the collection is empty.
+ */
+inline fun Collection<Long>.sumOrNull(): Long? =
+    if (isNotEmpty()) sum() else null
 
-inline fun <T> List<T>.forEachBatch(batchSize: Int, action: (List<T>) -> Unit) =
-    batched(batchSize).forEach(action)
-
-inline fun <T, R> Collection<T>.letIfAnyOrNull(block: (it: Iterable<T>) -> R): R? =
-    if (isEmpty()) null else block(this)
+/**
+ * Returns an average value of elements in the collection, or null if the collection is empty.
+ */
+inline fun Collection<Float>.averageOrNull(): Float? =
+    if (isNotEmpty()) average().toFloat() else null

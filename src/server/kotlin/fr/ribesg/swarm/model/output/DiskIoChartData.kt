@@ -1,6 +1,6 @@
 package fr.ribesg.swarm.model.output
 
-import fr.ribesg.swarm.extensions.letIfAnyOrNull
+import fr.ribesg.swarm.extensions.*
 import fr.ribesg.swarm.model.output.OutputDiskIoData.OutputDiskIoDataPointValues
 
 class DiskIoChartData(output: OutputDiskIoData) : ShapeChartData(
@@ -13,7 +13,7 @@ class DiskIoChartData(output: OutputDiskIoData) : ShapeChartData(
             side = Side.LEFT,
             points = output.data.map {
                 val readUsages = it.values.values.mapNotNull(OutputDiskIoDataPointValues::readUsage)
-                Point(it.date, readUsages.letIfAnyOrNull(Iterable<Float>::average))
+                Point(it.date, readUsages.averageOrNull())
             }
         ),
         ChartShape(
@@ -24,7 +24,7 @@ class DiskIoChartData(output: OutputDiskIoData) : ShapeChartData(
             side = Side.LEFT,
             points = output.data.map {
                 val writeUsages = it.values.values.mapNotNull(OutputDiskIoDataPointValues::writeUsage)
-                Point(it.date, writeUsages.letIfAnyOrNull(Iterable<Float>::average))
+                Point(it.date, writeUsages.averageOrNull())
             }
         ),
         ChartShape(
@@ -32,7 +32,7 @@ class DiskIoChartData(output: OutputDiskIoData) : ShapeChartData(
             legend = "Read Speed",
             points = output.data.map {
                 val readSpeeds = it.values.values.mapNotNull(OutputDiskIoDataPointValues::readSpeed)
-                Point(it.date, readSpeeds.letIfAnyOrNull(Iterable<Long>::sum))
+                Point(it.date, readSpeeds.sumOrNull())
             },
             shape = Shape.LINE,
             side = Side.RIGHT
@@ -42,7 +42,7 @@ class DiskIoChartData(output: OutputDiskIoData) : ShapeChartData(
             legend = "Write Speed",
             points = output.data.map {
                 val writeSpeeds = it.values.values.mapNotNull(OutputDiskIoDataPointValues::writeSpeed)
-                Point(it.date, writeSpeeds.letIfAnyOrNull(Iterable<Long>::sum))
+                Point(it.date, writeSpeeds.sumOrNull())
             },
             shape = Shape.LINE,
             side = Side.RIGHT
