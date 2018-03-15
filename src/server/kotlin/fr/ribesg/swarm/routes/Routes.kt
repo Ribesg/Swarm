@@ -1,10 +1,11 @@
 package fr.ribesg.swarm.routes
 
+import fr.ribesg.swarm.Config
 import fr.ribesg.swarm.routes.app.*
 import io.ktor.content.*
-import io.ktor.routing.Routing
+import io.ktor.routing.Route
 
-val Routes: Routing.() -> Unit = {
+fun Route.setupRoutes(config: Config) {
 
     resource("/", "static/index.html")
 
@@ -13,15 +14,13 @@ val Routes: Routing.() -> Unit = {
         resources("/")
     }
 
-    DragonflyRoute.setup(this)
+    setupDragonflyRoute(config)
 
-    HostsRoute.setup(this)
-    CpuDataRoute.setup(this)
-    RamDataRoute.setup(this)
-    NetDataRoute.setup(this)
-    DiskIoDataRoute.setup(this)
-    DiskSpaceDataRoute.setup(this)
-
-    HostRemoveRoute.setup(this)
+    setupHostsRoute()
+    setupCpuDataRoute()
+    setupRamDataRoute()
+    setupNetDataRoute()
+    setupDiskIoDataRoute()
+    setupDiskSpaceDataRoute()
 
 }

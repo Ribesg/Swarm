@@ -11,7 +11,7 @@ import java.time.*
  *
  * @see DataHandler
  */
-abstract class CommonDataHandler : DataHandler {
+abstract class CommonDataHandler(protected val database: Database) : DataHandler {
 
     /**
      * Live Clock
@@ -26,17 +26,17 @@ abstract class CommonDataHandler : DataHandler {
         Clock.tickMinutes(ZoneOffset.UTC)
 
     init {
-        DataArchiver
+        DataArchiver(database)
     }
 
     override fun isHostname(host: String): Boolean =
-        host in Database.getHostnames()
+        host in database.getHostnames()
 
     override fun getHostnames(): List<String> =
-        Database.getHostnames().sorted()
+        database.getHostnames().sorted()
 
     override fun removeHost(host: String) =
-        Database.removeHost(host)
+        database.removeHost(host)
 
     override fun getCpuData(host: String, mode: DataMode): CpuChartData? {
         val now = when (mode) {
@@ -50,7 +50,7 @@ abstract class CommonDataHandler : DataHandler {
             DataMode.DAY  -> now.minus(Duration.ofDays(1))
             DataMode.WEEK -> now.minus(Duration.ofDays(7))
         }.toEpochMilli()
-        val result = Database.getCpuData(host, type, from, now.toEpochMilli())
+        val result = database.getCpuData(host, type, from, now.toEpochMilli())
         return if (result.data.size < 3) null else CpuChartData(result)
     }
 
@@ -66,7 +66,7 @@ abstract class CommonDataHandler : DataHandler {
             DataMode.DAY  -> now.minus(Duration.ofDays(1))
             DataMode.WEEK -> now.minus(Duration.ofDays(7))
         }.toEpochMilli()
-        val result = Database.getRamData(host, type, from, now.toEpochMilli())
+        val result = database.getRamData(host, type, from, now.toEpochMilli())
         return if (result.data.size < 3) null else RamChartData(result)
     }
 
@@ -82,7 +82,7 @@ abstract class CommonDataHandler : DataHandler {
             DataMode.DAY  -> now.minus(Duration.ofDays(1))
             DataMode.WEEK -> now.minus(Duration.ofDays(7))
         }.toEpochMilli()
-        val result = Database.getNetData(host, type, from, now.toEpochMilli())
+        val result = database.getNetData(host, type, from, now.toEpochMilli())
         return if (result.data.size < 3) null else NetChartData(result)
     }
 
@@ -98,17 +98,17 @@ abstract class CommonDataHandler : DataHandler {
             DataMode.DAY  -> now.minus(Duration.ofDays(1))
             DataMode.WEEK -> now.minus(Duration.ofDays(7))
         }.toEpochMilli()
-        val result = Database.getDiskIoData(host, type, from, now.toEpochMilli())
+        val result = database.getDiskIoData(host, type, from, now.toEpochMilli())
         return if (result.data.size < 3) null else DiskIoChartData(result)
     }
 
     override fun getDiskSpaceData(host: String): DiskSpaceTableData {
-        return DiskSpaceTableData(Database.getDiskSpaceData(host))
+        return DiskSpaceTableData(database.getDiskSpaceData(host))
     }
 
     override fun getAlertData(from: Long, to: Long): List<OutputAlertData> = Database.call {
-        val hosts = Database.getHosts()
-        val (data, diskData, mostRecentLiveData) = Database.getAlertData(from, to)
+        val hosts = database.getHosts()
+        val (data, diskData, mostRecentLiveData) = database.getAlertData(from, to)
         return@call hosts.map { host ->
             val hostData = data.filter { it.host == host.host }
             val hostDiskData = diskData.filterKeys { it in hostData.map { it.id } }.flatMap { it.value }

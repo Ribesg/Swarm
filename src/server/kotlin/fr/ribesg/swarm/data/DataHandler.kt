@@ -1,6 +1,7 @@
 package fr.ribesg.swarm.data
 
 import fr.ribesg.swarm.Arguments
+import fr.ribesg.swarm.database.Database
 import fr.ribesg.swarm.model.DataMode
 import fr.ribesg.swarm.model.input.dragonfly.DragonflyPayload
 import fr.ribesg.swarm.model.output.*
@@ -14,15 +15,20 @@ interface DataHandler {
 
     companion object {
 
+        private lateinit var handler: DataHandler
+
+        fun init(arguments: Arguments, database: Database) {
+            handler = if (arguments.development) {
+                TestDataHandler(database)
+            } else {
+                RealDataHandler(database)
+            }
+        }
+
         /**
          * Calling `DataHandler()` will return either the real one or a test one depending on the context.
          */
-        operator fun invoke() =
-            if (Arguments.development) {
-                TestDataHandler
-            } else {
-                RealDataHandler
-            }
+        operator fun invoke(): DataHandler = handler
 
     }
 

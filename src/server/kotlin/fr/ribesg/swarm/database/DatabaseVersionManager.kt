@@ -1,6 +1,6 @@
 package fr.ribesg.swarm.database
 
-import fr.ribesg.swarm.database.Database.exec
+import fr.ribesg.swarm.database.Database.Companion.exec
 import fr.ribesg.swarm.database.tables.*
 import org.jetbrains.exposed.sql.*
 

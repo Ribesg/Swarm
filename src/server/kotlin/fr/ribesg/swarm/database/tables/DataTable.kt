@@ -1,7 +1,7 @@
 package fr.ribesg.swarm.database.tables
 
 import fr.ribesg.swarm.database.Database
-import fr.ribesg.swarm.database.Database.exec
+import fr.ribesg.swarm.database.Database.Companion.exec
 import fr.ribesg.swarm.extensions.runRawSql
 import fr.ribesg.swarm.model.database.*
 import org.jetbrains.exposed.sql.*
@@ -80,7 +80,7 @@ internal object DataTable : Table() {
             it[CPU_STEAL] = datum.cpuSteal
             it[RAM_USED] = datum.ramUsed
             it[SWAP_USED] = datum.swapUsed
-        } get ID
+        } get ID ?: throw Error("Insert failed")
     }
 
     /**

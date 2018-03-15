@@ -13,13 +13,17 @@ import java.util.concurrent.Executors
 /**
  * Handles the periodic conversion of live data into archived data and the cleanup of old data.
  */
-object DataArchiver {
+class DataArchiver(private val database: Database) {
 
-    private val ARCHIVE_LIVE_TO_HOUR_PERIOD = DbDataType.HOUR.interval
+    companion object {
 
-    private val ARCHIVE_HOUR_TO_DAY_PERIOD = DbDataType.DAY.interval
+        private val ARCHIVE_LIVE_TO_HOUR_PERIOD = DbDataType.HOUR.interval
 
-    private val ARCHIVE_DAY_TO_WEEK_PERIOD = DbDataType.WEEK.interval
+        private val ARCHIVE_HOUR_TO_DAY_PERIOD = DbDataType.DAY.interval
+
+        private val ARCHIVE_DAY_TO_WEEK_PERIOD = DbDataType.WEEK.interval
+
+    }
 
     /**
      * The logger
@@ -108,7 +112,7 @@ object DataArchiver {
         val previousMinuteMs = currentMinuteMs - Duration.ofMinutes(1).toMillis()
         val fiveMinutesAgoMs = currentMinuteMs - Duration.ofMinutes(5).toMillis()
         val (archivedRows, archivesCreated) = archiveData(LIVE, HOUR, previousMinuteMs, currentMinuteMs)
-        Database.deleteData(fiveMinutesAgoMs, LIVE)
+        database.deleteData(fiveMinutesAgoMs, LIVE)
         log.info("Archived $archivedRows LIVE rows into $archivesCreated HOUR rows")
     }
 
@@ -126,7 +130,7 @@ object DataArchiver {
         val previousTwoHoursMs = currentTwoHoursMs - Duration.ofHours(2).toMillis()
         val oneMonthAgo = currentTwoHoursMs - Duration.ofDays(31).toMillis()
         val (archivedRows, archivesCreated) = archiveData(DAY, WEEK, previousTwoHoursMs, currentTwoHoursMs)
-        Database.deleteData(oneMonthAgo, HOUR, DAY, WEEK)
+        database.deleteData(oneMonthAgo, HOUR, DAY, WEEK)
         log.info("Archived $archivedRows DAY rows into $archivesCreated WEEK rows")
     }
 

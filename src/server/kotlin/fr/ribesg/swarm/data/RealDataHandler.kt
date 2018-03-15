@@ -8,7 +8,7 @@ import fr.ribesg.swarm.model.input.dragonfly.*
 /**
  * The real [DataHandler] used in production
  */
-object RealDataHandler : CommonDataHandler() {
+class RealDataHandler(database: Database) : CommonDataHandler(database) {
 
     /**
      * The logger
@@ -26,7 +26,7 @@ object RealDataHandler : CommonDataHandler() {
             log.warn("Received message older than the last one for host ${payload.host}, ignoring")
         } else {
             lastMessageDate[payload.host] = payload.date
-            Database.push(dragonflyPayloadToInput(payload))
+            database.push(dragonflyPayloadToInput(payload))
         }
     }
 

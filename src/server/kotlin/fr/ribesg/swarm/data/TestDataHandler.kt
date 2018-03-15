@@ -15,12 +15,16 @@ import kotlin.collections.HashMap
 /**
  * A [DataHandler] used for testing, producing test data all by itself
  */
-object TestDataHandler : CommonDataHandler() {
+class TestDataHandler(database: Database) : CommonDataHandler(database) {
 
-    /**
-     * The amount of test hosts
-     */
-    private const val HOSTS_COUNT = 50
+    companion object {
+
+        /**
+         * The amount of test hosts
+         */
+        private const val HOSTS_COUNT = 50
+
+    }
 
     /**
      * The logger
@@ -79,7 +83,7 @@ object TestDataHandler : CommonDataHandler() {
                 val maxIoSpeed = randomMaxIoSpeed()
                 var lastDataDate: Long = 0
                 HostsTable.upsert(DbHost(host, maxRam, maxSwap))
-                Database.push((from..now step 5000).map { date ->
+                database.push((from..now step 5000).map { date ->
                     lastDataDate = date
                     randomData(
                         host, date, isFullCpu, hasIo, hasSteal, maxRam, maxSwap, netIfs, maxNetIn,
@@ -91,7 +95,7 @@ object TestDataHandler : CommonDataHandler() {
                     try {
                         Thread.sleep(Math.max(0, (nextDataDate - now) * 1000))
                         while (isHostname(host)) {
-                            Database.push(randomData(
+                            database.push(randomData(
                                 host, clock.instant().toEpochMilli(), isFullCpu, hasIo, hasSteal, maxRam, maxSwap, netIfs,
                                 maxNetIn, maxNetOut, devices, devicesSizes, isFullIo, maxIoSpeed
                             ))

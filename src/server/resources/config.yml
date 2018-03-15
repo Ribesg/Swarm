@@ -1,0 +1,15 @@
+#########################
+## Swarm Configuration ##
+#########################
+
+# Local host to bind to
+host: "0.0.0.0"
+
+# Local port to bind to
+port: 80
+
+# Key accepted from Dragonfly clients
+key: ""
+
+# Slack WebHook used to send alerts
+slackWebHook: ""

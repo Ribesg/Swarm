@@ -1,7 +1,7 @@
 package fr.ribesg.swarm.database.tables
 
 import fr.ribesg.swarm.database.Database
-import fr.ribesg.swarm.database.Database.exec
+import fr.ribesg.swarm.database.Database.Companion.exec
 import fr.ribesg.swarm.extensions.runRawSql
 import fr.ribesg.swarm.model.database.DbNetDatum
 import org.jetbrains.exposed.sql.*

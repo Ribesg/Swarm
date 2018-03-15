@@ -19,25 +19,54 @@ import java.util.*
 /**
  * Exposes the Database package to other parts of Swarm.
  */
-object Database {
+class Database(arguments: Arguments) {
 
-    /**
-     * The path to the DB file: swarm.db in the working directory.
-     */
-    private const val DB_PATH_FILE = "jdbc:h2:file:./swarm;trace_level_file=0"
+    companion object {
 
-    /**
-     * The path to the memory DB.
-     */
-    private const val DB_PATH_MEM = "jdbc:h2:mem:swarm;DB_CLOSE_DELAY=-1"
+        /**
+         * The path to the DB file: swarm.db in the working directory.
+         */
+        private const val DB_PATH_FILE = "jdbc:h2:file:./swarm;trace_level_file=0"
 
-    /**
-     * The class of the DB Driver.
-     */
-    private const val DB_DRIVER = "org.h2.Driver"
+        /**
+         * The path to the memory DB.
+         */
+        private const val DB_PATH_MEM = "jdbc:h2:mem:swarm;DB_CLOSE_DELAY=-1"
+
+        /**
+         * The class of the DB Driver.
+         */
+        private const val DB_DRIVER = "org.h2.Driver"
+
+        /**
+         * Checks that the current code is running inside a [Transaction].
+         */
+        fun checkInTransaction() {
+            checkNotNull(TransactionManager.currentOrNull()) {
+                "Should be called inside a transaction"
+            }
+        }
+
+        /**
+         * Executes the provided task inside a transaction if needed.
+         *
+         * @param task The task to execute
+         */
+        fun exec(task: Transaction.() -> Unit): Unit = call(task)
+
+        /**
+         * Executes the provided callable inside a transaction if needed.
+         *
+         * @param callable The callable to execute
+         *
+         * @return The result of the callable
+         */
+        fun <T> call(callable: Transaction.() -> T): T = transaction(statement = callable)
+
+    }
 
     init {
-        val path = if (Arguments.development) DB_PATH_MEM else DB_PATH_FILE
+        val path = if (arguments.development) DB_PATH_MEM else DB_PATH_FILE
         Database.connect(path, DB_DRIVER)
         DatabaseVersionManager.run()
     }
@@ -285,31 +314,6 @@ object Database {
             )
         })
     }
-
-    /**
-     * Checks that the current code is running inside a [Transaction].
-     */
-    internal fun checkInTransaction() {
-        checkNotNull(TransactionManager.currentOrNull()) {
-            "Should be called inside a transaction"
-        }
-    }
-
-    /**
-     * Executes the provided task inside a transaction if needed.
-     *
-     * @param task The task to execute
-     */
-    internal fun exec(task: Transaction.() -> Unit): Unit = call(task)
-
-    /**
-     * Executes the provided callable inside a transaction if needed.
-     *
-     * @param callable The callable to execute
-     *
-     * @return The result of the callable
-     */
-    internal fun <T> call(callable: Transaction.() -> T): T = transaction(callable)
 
     /**
      * Converts an [InputDatum] into a [DbHost].

@@ -2,7 +2,7 @@
   <configuration default="false" name="JAR - Maven Build Dev &amp; Run Dev" type="JarApplication" factoryName="JAR Application" singleton="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="JAR_PATH" value="$PROJECT_DIR$/target/Swarm.jar" />
-    <option name="PROGRAM_PARAMETERS" value="--dev --key dev" />
+    <option name="PROGRAM_PARAMETERS" value="--dev" />
     <option name="WORKING_DIRECTORY" value="C:\Users\Ribesg\IdeaProjects\Swarm" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <envs />
