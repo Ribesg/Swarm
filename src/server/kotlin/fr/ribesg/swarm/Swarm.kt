@@ -8,12 +8,13 @@ import fr.ribesg.swarm.alerts.SlackAlertLogger
 import fr.ribesg.swarm.data.DataHandler
 import fr.ribesg.swarm.database.Database
 import fr.ribesg.swarm.extensions.stackTraceString
-import fr.ribesg.swarm.routes.setupRoutes
+import fr.ribesg.swarm.routes.*
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import org.slf4j.event.Level
 import java.nio.file.*
 
 val jackson: ObjectMapper = jacksonObjectMapper().findAndRegisterModules()
@@ -35,11 +36,18 @@ object Swarm {
     private val log = Log.get("Swarm")
 
     private val ktorModule: Application.() -> Unit = {
+
         install(DefaultHeaders)
-        install(CallLogging)
+        install(CallLogging) {
+            level = Level.INFO
+        }
+        installSessions(config)
+        installAuthentication(config)
+
         routing {
             setupRoutes(config)
         }
+
     }
 
     fun init(args: Array<String>) = mainBody {
@@ -47,8 +55,8 @@ object Swarm {
             parseArguments(args)
             if (parseConfig()) return@mainBody
             initDatabase()
-            initSlackLogger()
             DataHandler.init(arguments, database)
+            initSlackLogger()
             startServer()
         } catch (t: Throwable) {
             log.error("Error: ${t.stackTraceString()}")

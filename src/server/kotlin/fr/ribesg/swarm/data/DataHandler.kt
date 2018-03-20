@@ -1,6 +1,6 @@
 package fr.ribesg.swarm.data
 
-import fr.ribesg.swarm.Arguments
+import fr.ribesg.swarm.*
 import fr.ribesg.swarm.database.Database
 import fr.ribesg.swarm.model.DataMode
 import fr.ribesg.swarm.model.input.dragonfly.DragonflyPayload
@@ -15,7 +15,9 @@ interface DataHandler {
 
     companion object {
 
-        private lateinit var handler: DataHandler
+        private val log = Log.get(DataHandler::class)
+
+        private var handler: DataHandler? = null
 
         fun init(arguments: Arguments, database: Database) {
             handler = if (arguments.development) {
@@ -28,7 +30,13 @@ interface DataHandler {
         /**
          * Calling `DataHandler()` will return either the real one or a test one depending on the context.
          */
-        operator fun invoke(): DataHandler = handler
+        operator fun invoke(): DataHandler {
+            while (handler == null) {
+                log.debug("Waiting for DataHandler to finish initializing")
+                Thread.sleep(1000)
+            }
+            return handler!!
+        }
 
     }
 

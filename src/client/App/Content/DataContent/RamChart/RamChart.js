@@ -43,8 +43,10 @@ class RamChart extends React.PureComponent {
     componentWillUnmount() {
         clearInterval(this.timer);
         this.timer = null;
-        this.request.abort();
-        this.request = null;
+        if (this.request) {
+            this.request.cancel();
+            this.request = null;
+        }
     }
 
     render() {

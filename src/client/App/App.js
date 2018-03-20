@@ -1,10 +1,12 @@
-import React    from "react";
-import autoBind from "react-autobind";
+import React      from "react";
+import autoBind   from "react-autobind";
+import { Loader } from "react-feather";
 import "react-select/dist/react-select.css";
-import Api      from "./Api";
+import Api        from "./Api";
 import "./App.sass";
-import Content  from "./Content/Content";
-import TopForm  from "./TopForm/TopForm";
+import Content    from "./Content/Content";
+import Login      from "./Login/Login";
+import TopForm    from "./TopForm/TopForm";
 
 class App extends React.PureComponent {
 
@@ -14,10 +16,13 @@ class App extends React.PureComponent {
         this.request = null;
         this.state = {
             hosts: null,
+            loading: true,
+            loggedIn: false,
             selectedHost: this._getUrlParameter("host", null),
             selectedMode: this._getUrlParameter("mode", "LIVE"),
         };
         this.timer = null;
+        Api.set401Callback(this._on401Error);
     }
 
     componentDidMount() {
@@ -30,24 +35,33 @@ class App extends React.PureComponent {
     }
 
     render() {
-        const {hosts, selectedHost, selectedMode} = this.state;
+        const {hosts, loading, loggedIn, selectedHost, selectedMode} = this.state;
         this._setUrl(this.state.selectedHost, this.state.selectedMode);
-        return (
-            <div id="app">
+        let content;
+        if (loading) {
+            content = <Loader className="loader"/>;
+        } else if (loggedIn) {
+            content = [
                 <TopForm
+                    key="form"
                     hosts={hosts}
                     modes={["LIVE", "HOUR", "DAY", "WEEK"]}
                     onHostSelected={this._onHostSelected}
                     onModeSelected={this._onModeSelected}
+                    onLogout={this._onLogout}
                     selectedHost={selectedHost}
                     selectedMode={selectedMode}
-                />
+                />,
                 <Content
+                    key="content"
                     selectedHost={selectedHost}
                     selectedMode={selectedMode}
-                />
-            </div>
-        );
+                />,
+            ];
+        } else {
+            content = <Login onLoggedIn={this._onLoggedIn}/>;
+        }
+        return <div id="app">{content}</div>;
     }
 
     _onHostSelected(host) {
@@ -62,17 +76,17 @@ class App extends React.PureComponent {
         }
     }
 
-    _clearTimer() {
-        if (this.timer != null) {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
+    _onLogout() {
+        this._cancelRequest();
+        this._clearTimer();
+        Api.postLogout(this._onLoggedOut);
+        this.setState({loading: true});
     }
 
-    _cancelRequest() {
-        if (this.request != null) {
-            this.request.abort();
-            this.request = null;
+    _onLoggedOut(data, error) {
+        this.setState({loading: false});
+        if (!error) {
+            this.setState({loggedIn: false});
         }
     }
 
@@ -82,13 +96,27 @@ class App extends React.PureComponent {
         this.timer = setInterval(this._fetchHosts, 5000);
     }
 
+    _clearTimer() {
+        if (this.timer != null) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+    }
+
     _fetchHosts() {
         this.request = Api.getHosts(this._onHostsFetched);
     }
 
+    _cancelRequest() {
+        if (this.request != null) {
+            this.request.cancel();
+            this.request = null;
+        }
+    }
+
     _onHostsFetched(data, error) {
         if (!error) {
-            this.setState({hosts: data["hosts"]});
+            this.setState({hosts: data["hosts"], loading: false, loggedIn: true});
         }
     }
 
@@ -117,6 +145,17 @@ class App extends React.PureComponent {
             const url = `/?host=${host}&mode=${mode}`;
             window.history.pushState(null, "", url);
         }
+    }
+
+    _on401Error() {
+        this._cancelRequest();
+        this._clearTimer();
+        this.setState({loading: false, loggedIn: false});
+    }
+
+    _onLoggedIn() {
+        this.setState({loading: false, loggedIn: true});
+        this._fetchHostsNowAndResetTimer();
     }
 
 }

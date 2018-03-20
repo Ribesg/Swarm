@@ -13,3 +13,15 @@ key: ""
 
 # Slack WebHook used to send alerts
 slackWebHook: ""
+
+# Secret key used to sign session cookies
+sessionSecret: ""
+
+# Accounts
+accounts:
+  - user: admin
+    password: changeMe
+    isAdmin: true
+  - user: user
+    password: changeMeToo
+    isAdmin: false

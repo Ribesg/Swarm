@@ -4173,6 +4173,10 @@ react-faux-dom@^4.1.0:
     query-selector "^1.0.9"
     style-attr "^1.0.1"
 
+react-feather@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-1.0.8.tgz#69b13d5c729949f194d33201dee91bab67fa31a2"
+
 react-input-autosize@^2.1.2:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.2.1.tgz#ec428fa15b1592994fb5f9aa15bb1eb6baf420f8"

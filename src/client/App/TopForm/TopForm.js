@@ -1,11 +1,12 @@
-import PropTypes from "prop-types";
-import React     from "react";
-import Select    from "react-select";
+import PropTypes  from "prop-types";
+import React      from "react";
+import { LogOut } from "react-feather";
+import Select     from "react-select";
 import "./TopForm.sass";
 
 const dataTransform = data => data ? data.map(d => ({value: d, label: d})) : [];
 
-const TopForm = ({hosts, modes, onHostSelected, onModeSelected, selectedHost, selectedMode}) => (
+const TopForm = ({hosts, modes, onHostSelected, onModeSelected, onLogout, selectedHost, selectedMode}) => (
     <div id="top-form">
         <h1>Swarm</h1>
         <div className="spacer"/>
@@ -28,6 +29,9 @@ const TopForm = ({hosts, modes, onHostSelected, onModeSelected, selectedHost, se
                 searchable={false}
             />
         </div>
+        <div className="logout" onClick={onLogout}>
+            <LogOut/>
+        </div>
     </div>
 );
 
@@ -36,6 +40,7 @@ TopForm.propTypes = {
     modes: PropTypes.arrayOf(PropTypes.oneOf(["LIVE", "HOUR", "DAY", "WEEK"])).isRequired,
     onHostSelected: PropTypes.func.isRequired,
     onModeSelected: PropTypes.func.isRequired,
+    onLogout: PropTypes.func.isRequired,
     selectedHost: PropTypes.string,
     selectedMode: PropTypes.oneOf(["LIVE", "HOUR", "DAY", "WEEK"]),
 };

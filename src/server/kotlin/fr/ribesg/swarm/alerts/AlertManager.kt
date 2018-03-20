@@ -22,7 +22,10 @@ object AlertManager {
     private val alertEvents: MutableList<AlertEvent> = LinkedList()
 
     fun run(currentMinute: Instant) {
-        executor.submit { runTask(currentMinute) }
+        executor.submit {
+            Thread.sleep(1)
+            runTask(currentMinute)
+        }
     }
 
     private fun runTask(currentMinute: Instant) {

@@ -4,7 +4,9 @@ data class Config(
     val host: String,
     val port: Int,
     val key: String,
-    val slackWebHook: String
+    val slackWebHook: String,
+    val sessionSecret: String,
+    val accounts: List<Account>
 ) {
 
     fun validated(arguments: Arguments): Config {
@@ -13,7 +15,15 @@ data class Config(
         if (!arguments.development) {
             require(key.isNotBlank()) { "key cannot be blank" }
         }
+        require(sessionSecret.isNotBlank()) { "sessionSecret cannot be blank" }
+        require(accounts.isNotEmpty()) { "accounts cannot be empty" }
         return this
     }
+
+    data class Account(
+        val user: String,
+        val password: String,
+        val isAdmin: Boolean
+    )
 
 }

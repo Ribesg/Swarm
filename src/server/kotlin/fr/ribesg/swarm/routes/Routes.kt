@@ -3,7 +3,7 @@ package fr.ribesg.swarm.routes
 import fr.ribesg.swarm.Config
 import fr.ribesg.swarm.routes.app.*
 import io.ktor.content.*
-import io.ktor.routing.Route
+import io.ktor.routing.*
 
 fun Route.setupRoutes(config: Config) {
 
@@ -16,11 +16,17 @@ fun Route.setupRoutes(config: Config) {
 
     setupDragonflyRoute(config)
 
-    setupHostsRoute()
-    setupCpuDataRoute()
-    setupRamDataRoute()
-    setupNetDataRoute()
-    setupDiskIoDataRoute()
-    setupDiskSpaceDataRoute()
+    setupLoginRoute()
+    setupLogoutRoute()
+
+    route("/data") {
+        requireLoggedIn()
+        setupHostsRoute()
+        setupCpuDataRoute()
+        setupRamDataRoute()
+        setupNetDataRoute()
+        setupDiskIoDataRoute()
+        setupDiskSpaceDataRoute()
+    }
 
 }

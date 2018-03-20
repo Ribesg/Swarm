@@ -69,11 +69,6 @@
 			<artifactId>ktor-server-netty</artifactId>
 			<version>${ktor.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>io.ktor</groupId>
-			<artifactId>ktor-auth</artifactId>
-			<version>${ktor.version}</version>
-		</dependency>
 
 		<!-- Ktor Client -->
 		<dependency>
@@ -249,10 +244,6 @@
 								<includes>
 									<include>**</include>
 								</includes>
-								<excludes>
-									<exclude>org.mortbay.jetty.alpn:alpn-boot</exclude>
-									<exclude>ch.qos.logback:logback-classic</exclude>
-								</excludes>
 							</artifactSet>
 						</configuration>
 					</execution>
