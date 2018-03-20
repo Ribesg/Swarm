@@ -1,8 +1,9 @@
-import Api        from "App/Api";
-import ShapeChart from "charts/ShapeChart";
-import PropTypes  from "prop-types";
-import React      from "react";
-import autoBind   from "react-autobind";
+import Api            from "App/Api";
+import ShapeChart     from "charts/ShapeChart";
+import PropTypes      from "prop-types";
+import React          from "react";
+import autoBind       from "react-autobind";
+import LoadingSpinner from "../../../LoadingSpinner/LoadingSpinner";
 import "./RamChart.sass";
 
 class RamChart extends React.PureComponent {
@@ -51,10 +52,17 @@ class RamChart extends React.PureComponent {
 
     render() {
         const {selectedMode} = this.props;
-        if (this.state.data === null) {
+        const {data, loading} = this.state;
+        if (loading) {
             return (
                 <div id="ram-chart" className="empty">
-                    <p>{this.state.loading ? "Loading..." : `No ${selectedMode} RAM Data`}</p>
+                    <LoadingSpinner/>
+                </div>
+            );
+        } else if (data === null) {
+            return (
+                <div id="ram-chart" className="empty">
+                    <p>{`No ${selectedMode} RAM Data`}</p>
                 </div>
             );
         } else {

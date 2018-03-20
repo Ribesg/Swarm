@@ -15,6 +15,16 @@ class Login extends React.PureComponent {
         };
     }
 
+    componentDidMount() {
+        this._userInput.addEventListener("change", this._onAnyInputChange);
+        this._passwordInput.addEventListener("change", this._onAnyInputChange);
+    }
+
+    componentWillUnmount() {
+        this._userInput.removeEventListener("change", this._onAnyInputChange);
+        this._passwordInput.removeEventListener("change", this._onAnyInputChange);
+    }
+
     render() {
         const {loading, canSubmit} = this.state;
         return (
@@ -26,7 +36,6 @@ class Login extends React.PureComponent {
                         ref={input => this._userInput = input}
                         type="text"
                         autoComplete="username"
-                        onChange={this._onAnyInputChange}
                     />
                     <label htmlFor="password">Password</label>
                     <input
@@ -34,9 +43,10 @@ class Login extends React.PureComponent {
                         ref={input => this._passwordInput = input}
                         type="password"
                         autoComplete="current-password"
-                        onChange={this._onAnyInputChange}
                     />
-                    <button type="submit" disabled={!canSubmit}>Login</button>
+                    <div className="button-container">
+                        <button type="submit" disabled={!canSubmit}>Login</button>
+                    </div>
                 </form>
             </div>
         );

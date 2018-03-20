@@ -3,6 +3,7 @@ import { roundWithMaxDecimals } from "charts/ChartUtils";
 import PropTypes                from "prop-types";
 import React                    from "react";
 import autoBind                 from "react-autobind";
+import LoadingSpinner           from "../../../LoadingSpinner/LoadingSpinner";
 import Table                    from "./Table";
 
 class DiskSpaceTable extends React.PureComponent {
@@ -45,16 +46,23 @@ class DiskSpaceTable extends React.PureComponent {
     }
 
     render() {
-        if (this.state.data === null) {
+        const {columns, data, loading} = this.state;
+        if (loading) {
+            return (
+                <div id="disk-space-table" className="empty">
+                    <LoadingSpinner/>
+                </div>
+            );
+        } else if (data === null) {
             return (
                 <div id="disk-space-table" className="empty" style={{minHeight: "5em"}}>
-                    <p>{this.state.loading ? "Loading..." : `No Disk Space Data`}</p>
+                    <p>No Disk Space Data</p>
                 </div>
             );
         } else {
             return (
                 <div id="disk-space-table">
-                    <Table columns={this.state.columns} data={this.state.data}/>
+                    <Table columns={columns} data={data}/>
                 </div>
             );
         }

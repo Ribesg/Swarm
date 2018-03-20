@@ -1,8 +1,9 @@
-import Api        from "App/Api";
-import ShapeChart from "charts/ShapeChart";
-import PropTypes  from "prop-types";
-import React      from "react";
-import autoBind   from "react-autobind";
+import Api            from "App/Api";
+import ShapeChart     from "charts/ShapeChart";
+import PropTypes      from "prop-types";
+import React          from "react";
+import autoBind       from "react-autobind";
+import LoadingSpinner from "../../../LoadingSpinner/LoadingSpinner";
 import "./NetChart.sass";
 
 class NetChart extends React.PureComponent {
@@ -49,10 +50,17 @@ class NetChart extends React.PureComponent {
 
     render() {
         const {selectedMode} = this.props;
-        if (this.state.data === null) {
+        const {data, loading} = this.state;
+        if (loading) {
             return (
                 <div id="net-chart" className="empty">
-                    <p>{this.state.loading ? "Loading..." : `No ${selectedMode} Network Data`}</p>
+                    <LoadingSpinner/>
+                </div>
+            );
+        } else if (data === null) {
+            return (
+                <div id="net-chart" className="empty">
+                    <p>{`No ${selectedMode} Network Data`}</p>
                 </div>
             );
         } else {
@@ -61,7 +69,7 @@ class NetChart extends React.PureComponent {
                     <ShapeChart
                         title="Network"
                         legend={true}
-                        data={this.state.data}
+                        data={data}
                         xScaleType="time"
                         y0MaxTickTextWidth={9}
                         y0TickFormat={this._formatY0AxisLabel}

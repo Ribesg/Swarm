@@ -4,6 +4,7 @@ import ShapeChart               from "charts/ShapeChart";
 import PropTypes                from "prop-types";
 import React                    from "react";
 import autoBind                 from "react-autobind";
+import LoadingSpinner           from "../../../LoadingSpinner/LoadingSpinner";
 import "./CpuChart.sass";
 
 class CpuChart extends React.PureComponent {
@@ -50,10 +51,17 @@ class CpuChart extends React.PureComponent {
 
     render() {
         const {selectedMode} = this.props;
-        if (this.state.data === null) {
+        const {data, loading} = this.state;
+        if (loading) {
             return (
                 <div id="cpu-chart" className="empty">
-                    <p>{this.state.loading ? "Loading..." : `No ${selectedMode} CPU Data`}</p>
+                    <LoadingSpinner/>
+                </div>
+            );
+        } else if (data === null) {
+            return (
+                <div id="cpu-chart" className="empty">
+                    <p>{`No ${selectedMode} CPU Data`}</p>
                 </div>
             );
         } else {
@@ -62,7 +70,7 @@ class CpuChart extends React.PureComponent {
                     <ShapeChart
                         title="CPU"
                         legend={true}
-                        data={this.state.data}
+                        data={data}
                         xScaleType="time"
                         y0Domain={[0, 100]}
                         y0MaxTickTextWidth={4}

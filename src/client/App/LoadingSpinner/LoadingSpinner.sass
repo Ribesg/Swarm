@@ -1,0 +1,18 @@
+.loading-spinner
+  margin: auto
+  stroke: gray
+  animation: spin 3s linear 0s infinite
+
+  &.medium
+    width: 2.5rem
+    height: 2.5rem
+
+  &.big
+    width: 4rem
+    height: 4rem
+
+  @keyframes spin
+    from
+      transform: rotate(0deg)
+    to
+      transform: rotate(359deg)

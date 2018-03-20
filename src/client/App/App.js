@@ -1,12 +1,12 @@
-import React      from "react";
-import autoBind   from "react-autobind";
-import { Loader } from "react-feather";
+import React          from "react";
+import autoBind       from "react-autobind";
 import "react-select/dist/react-select.css";
-import Api        from "./Api";
+import Api            from "./Api";
 import "./App.sass";
-import Content    from "./Content/Content";
-import Login      from "./Login/Login";
-import TopForm    from "./TopForm/TopForm";
+import Content        from "./Content/Content";
+import LoadingSpinner from "./LoadingSpinner/LoadingSpinner";
+import Login          from "./Login/Login";
+import TopForm        from "./TopForm/TopForm";
 
 class App extends React.PureComponent {
 
@@ -39,7 +39,7 @@ class App extends React.PureComponent {
         this._setUrl(this.state.selectedHost, this.state.selectedMode);
         let content;
         if (loading) {
-            content = <Loader className="loader"/>;
+            content = <LoadingSpinner size="big"/>;
         } else if (loggedIn) {
             content = [
                 <TopForm

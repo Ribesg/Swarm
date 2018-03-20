@@ -4,6 +4,7 @@ import ShapeChart               from "charts/ShapeChart";
 import PropTypes                from "prop-types";
 import React                    from "react";
 import autoBind                 from "react-autobind";
+import LoadingSpinner           from "../../../LoadingSpinner/LoadingSpinner";
 import "./DiskIoChart.sass";
 
 class DiskIoChart extends React.PureComponent {
@@ -52,10 +53,17 @@ class DiskIoChart extends React.PureComponent {
 
     render() {
         const {selectedMode} = this.props;
-        if (this.state.data === null) {
+        const {data, loading, maxUsage} = this.state;
+        if (loading) {
             return (
                 <div id="disk-io-chart" className="empty">
-                    <p>{this.state.loading ? "Loading..." : `No ${selectedMode} Disk I/O Data`}</p>
+                    <LoadingSpinner/>
+                </div>
+            );
+        } else if (data === null) {
+            return (
+                <div id="disk-io-chart" className="empty">
+                    <p>{`No ${selectedMode} Disk I/O Data`}</p>
                 </div>
             );
         } else {
@@ -64,9 +72,9 @@ class DiskIoChart extends React.PureComponent {
                     <ShapeChart
                         title={"Disk IO"}
                         legend={true}
-                        data={this.state.data}
+                        data={data}
                         xScaleType="time"
-                        y0Domain={[0, this.state.maxUsage]}
+                        y0Domain={[0, maxUsage]}
                         y0MaxTickTextWidth={4}
                         y0TickFormat={d => roundWithMaxDecimals(d, 1) + "%"}
                         y0Title="Usage"
