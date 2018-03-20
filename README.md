@@ -34,18 +34,17 @@ Get the resulting jar file (`target/Swarm.jar`), move it where you want and run 
 ````bash
 cd ..
 mv Swarm/target/Swarm.jar .
-java -jar Swarm.jar --key $KEY --slack-hook $SLACK_HOOK
+java -jar Swarm.jar
 ````
+
+On the first run, Swarm will generate a configuration file (`config.yml`).
+Edit it then restart Swarm.
 
 All available arguments:
 ````
          -d, --debug - Enable debug output
        -v, --verbose - Enable verbose output
 --dev, --development - Enable development mode
-              --host - Local host to bind to (default: 0.0.0.0)
-              --port - Local port to bind to (default: 80)
-           -k, --key - Key accepted from Dragonfly clients
-    -s, --slack-hook - Slack WebHook used to send alerts (default: alerts disabled)
 ````
 
 ### Dragonfly
