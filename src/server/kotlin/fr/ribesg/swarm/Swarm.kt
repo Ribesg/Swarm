@@ -39,7 +39,7 @@ object Swarm {
 
         install(DefaultHeaders)
         install(CallLogging) {
-            level = Level.INFO
+            level = Level.valueOf(config.requestLoggingLevel)
         }
         installSessions(config)
         installAuthentication(config)

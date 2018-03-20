@@ -11,6 +11,9 @@ port: 80
 # Key accepted from Dragonfly clients
 key: ""
 
+# Request logging level, one of [ERROR, WARN, INFO, DEBUG, TRACE]
+requestLoggingLevel: DEBUG
+
 # Slack WebHook used to send alerts
 slackWebHook: ""
 
