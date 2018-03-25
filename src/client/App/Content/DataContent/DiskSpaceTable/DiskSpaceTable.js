@@ -5,6 +5,7 @@ import React                    from "react";
 import autoBind                 from "react-autobind";
 import LoadingSpinner           from "../../../LoadingSpinner/LoadingSpinner";
 import Table                    from "./Table";
+import "./DiskSpaceTable.sass"
 
 class DiskSpaceTable extends React.PureComponent {
 
@@ -55,7 +56,7 @@ class DiskSpaceTable extends React.PureComponent {
             );
         } else if (data === null) {
             return (
-                <div id="disk-space-table" className="empty" style={{minHeight: "5em"}}>
+                <div id="disk-space-table" className="empty">
                     <p>No Disk Space Data</p>
                 </div>
             );
