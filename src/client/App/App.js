@@ -1,6 +1,5 @@
 import React          from "react";
 import autoBind       from "react-autobind";
-import "react-select/dist/react-select.css";
 import Api            from "./Api";
 import "./App.sass";
 import Content        from "./Content/Content";

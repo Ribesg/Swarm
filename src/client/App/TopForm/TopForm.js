@@ -1,32 +1,35 @@
-import PropTypes  from "prop-types";
-import React      from "react";
-import { LogOut } from "react-feather";
-import Select     from "react-select";
+import PropTypes        from "prop-types";
+import React            from "react";
+import { LogOut }       from "react-feather";
+import BaseSearchSelect from "../SearchSelect/BaseSearchSelect";
 import "./TopForm.sass";
-
-const dataTransform = data => data ? data.map(d => ({value: d, label: d})) : [];
 
 const TopForm = ({hosts, modes, onHostSelected, onModeSelected, onLogout, selectedHost, selectedMode}) => (
     <div id="top-form">
         <h1>Swarm</h1>
         <div className="spacer"/>
         <div className="host select">
-            <span>Host</span>
-            <Select
-                options={dataTransform(hosts)}
-                value={selectedHost}
-                onChange={d => onHostSelected(d.value)}
-                clearable={false}
+            <label>Host</label>
+            <BaseSearchSelect
+                onValueSelected={onHostSelected}
+                optionsProvider={(query) => ({
+                    values: hosts.filter(h => h.toLowerCase().indexOf(query.toLowerCase()) != -1),
+                })}
+                placeholder={"Select Host..."}
+                selectedValue={selectedHost}
+                size={12.5}
             />
         </div>
         <div className="mode select">
-            <span>Mode</span>
-            <Select
-                options={dataTransform(modes)}
-                value={selectedMode}
-                onChange={d => onModeSelected(d.value)}
-                clearable={false}
+            <label>Mode</label>
+            <BaseSearchSelect
+                onValueSelected={onModeSelected}
+                optionsProvider={() => ({
+                    values: modes,
+                })}
                 searchable={false}
+                selectedValue={selectedMode}
+                size={5}
             />
         </div>
         <div className="logout" onClick={onLogout}>
