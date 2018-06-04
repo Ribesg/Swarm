@@ -2,6 +2,14 @@
 
 Swarm is an application aggregating hardware data from a _swarm_ of servers.
 
+## Screenshots
+
+#### Desktop
+[![](https://images.weserv.nl/?url=i.imgur.com/lqMLiHx.png&w=960)](https://i.imgur.com/lqMLiHx.png)
+
+#### Mobile
+[![](https://images.weserv.nl/?url=i.imgur.com/Sd5ldGI.png&h=640)](https://i.imgur.com/Sd5ldGI.png)
+
 ## Components
 
 * A web server built with [Ktor], written in [Kotlin]
