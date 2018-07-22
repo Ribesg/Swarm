@@ -85,10 +85,12 @@ class Database(arguments: Arguments) {
      * @param datum the datum to push
      */
     fun push(datum: InputDatum) = exec {
+        log.verbose("Pushing datum:\n$datum")
         HostsTable.upsert(inputToDbHost(datum))
         val dataRef = DataTable.insert(inputToDbDatum(datum))
         NetDataTable.insert(inputToDbNetData(dataRef, datum))
         DiskDataTable.insert(inputToDbDiskData(dataRef, datum))
+        log.verbose("Successfully pushed datum")
     }
 
     /**
@@ -97,6 +99,7 @@ class Database(arguments: Arguments) {
      * @param data the data points to push
      */
     fun push(data: Iterable<InputDatum>) = exec {
+        log.verbose("Pushing data:\n$data")
         val dataRefs = DataTable.insert(data.map(this@Database::inputToDbDatum))
         val zipped = dataRefs.zip(data)
         val netData = LinkedList<DbNetDatum>()
@@ -107,6 +110,7 @@ class Database(arguments: Arguments) {
         }
         NetDataTable.insert(netData)
         DiskDataTable.insert(diskData)
+        log.verbose("Successfully pushed data")
     }
 
     /**
