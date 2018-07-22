@@ -30,6 +30,8 @@ fun Route.setupDragonflyRoute(config: Config) = post(PATH) {
         return@post
     }
 
+    log.verbose(payloadString)
+
     val payload = try {
         jackson.readValue<DragonflyPayload>(payloadString)
     } catch (t: Throwable) {
