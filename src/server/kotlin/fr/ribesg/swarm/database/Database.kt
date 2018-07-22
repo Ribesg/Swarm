@@ -1,6 +1,6 @@
 package fr.ribesg.swarm.database
 
-import fr.ribesg.swarm.Arguments
+import fr.ribesg.swarm.*
 import fr.ribesg.swarm.database.tables.*
 import fr.ribesg.swarm.model.database.*
 import fr.ribesg.swarm.model.input.InputDatum
@@ -39,6 +39,11 @@ class Database(arguments: Arguments) {
         private const val DB_DRIVER = "org.h2.Driver"
 
         /**
+         * The logger
+         */
+        private val log = Log.get(Database::class)
+
+        /**
          * Checks that the current code is running inside a [Transaction].
          */
         fun checkInTransaction() {
@@ -61,7 +66,10 @@ class Database(arguments: Arguments) {
          *
          * @return The result of the callable
          */
-        fun <T> call(callable: Transaction.() -> T): T = transaction(statement = callable)
+        fun <T> call(callable: Transaction.() -> T): T = transaction {
+            addLogger(Slf4jSqlDebugLogger)
+            callable()
+        }
 
     }
 
