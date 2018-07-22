@@ -9,7 +9,7 @@ class Logger(name: String?) : MarkerIgnoringBase() {
 
     override fun isTraceEnabled() = Log.verbose
 
-    override fun isDebugEnabled() = Log.debug
+    override fun isDebugEnabled() = Log.verbose || Log.debug
 
     override fun isInfoEnabled() = true
 

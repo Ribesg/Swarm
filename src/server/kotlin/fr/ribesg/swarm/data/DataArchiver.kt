@@ -96,14 +96,18 @@ class DataArchiver(private val database: Database) {
      */
     private fun run() = Database.exec {
         log.debug("Archiving live data")
-        runLiveArchiver()
-        if (lastRunHour != hourClock.instant()) {
-            runHourArchiver()
-            if (lastRunDay != dayClock.instant()) {
-                runDayArchiver()
+        try {
+            runLiveArchiver()
+            if (lastRunHour != hourClock.instant()) {
+                runHourArchiver()
+                if (lastRunDay != dayClock.instant()) {
+                    runDayArchiver()
+                }
             }
+            AlertManager.run(lastRunLive)
+        } catch (t: Throwable) {
+            log.error("Fatal error in data archiver loop", t)
         }
-        AlertManager.run(lastRunLive)
     }
 
     private fun runLiveArchiver() {
