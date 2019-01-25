@@ -110,13 +110,13 @@ object AlertManager {
         val alertLevel: AlertLevel?
         when {
 
-            lastTwoMinutesCpuLoad > 9900  -> {
-                date = hostData.data.takeLast(2).first().date
+            lastFiveMinutesCpuLoad > 9900 -> {
+                date = hostData.data.first().date
                 alertLevel = CRITICAL
             }
 
-            lastFiveMinutesCpuLoad > 9000 -> {
-                date = hostData.data.first().date
+            lastTwoMinutesCpuLoad > 9990  -> {
+                date = hostData.data.takeLast(2).first().date
                 alertLevel = WARNING
             }
 

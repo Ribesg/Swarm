@@ -38,7 +38,7 @@
     "prop-types": "15.6.1",
     "react": "16.3.2",
     "react-autobind": "1.0.6",
-    "react-dom": "16.3.2",
+    "react-dom": "16.3.3",
     "react-faux-dom": "4.1.0",
     "react-feather": "1.1.0",
     "react-sizeme": "2.4.3"
