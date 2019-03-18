@@ -133,8 +133,8 @@ object AlertManager {
         }
         val message =
             when (alertLevel) {
-                CRITICAL -> "*%.1f%%* CPU load over 2 minutes".format(lastTwoMinutesCpuLoad / 100.0)
-                WARNING  -> "*%.1f%%* CPU load over 5 minutes".format(lastFiveMinutesCpuLoad / 100.0)
+                CRITICAL -> "*%.1f%%* CPU load over 5 minutes".format(lastTwoMinutesCpuLoad / 100.0)
+                WARNING  -> "*%.1f%%* CPU load over 2 minutes".format(lastFiveMinutesCpuLoad / 100.0)
                 NONE     -> "CPU load back to *%.1f%%* over 5 minutes".format(lastFiveMinutesCpuLoad / 100.0)
                 else     -> null
             }
