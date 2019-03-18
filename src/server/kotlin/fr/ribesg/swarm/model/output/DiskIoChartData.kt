@@ -1,6 +1,7 @@
 package fr.ribesg.swarm.model.output
 
-import fr.ribesg.swarm.extensions.*
+import fr.ribesg.swarm.extensions.averageOrNull
+import fr.ribesg.swarm.extensions.sumOrNull
 import fr.ribesg.swarm.model.output.OutputDiskIoData.OutputDiskIoDataPointValues
 
 class DiskIoChartData(output: OutputDiskIoData) : ShapeChartData(
@@ -53,9 +54,12 @@ class DiskIoChartData(output: OutputDiskIoData) : ShapeChartData(
     object EMPTY {
         val data: List<*>? = null
         const val maxUsage: Int = 0
+        const val maxSpeed: Int = 0
     }
 
     val maxUsage = computeMaxUsage()
+
+    val maxSpeed = computeMaxSpeed()
 
     private fun computeMaxUsage(): Int {
         val dataMax =
@@ -66,5 +70,8 @@ class DiskIoChartData(output: OutputDiskIoData) : ShapeChartData(
                 .max() ?: 0
         return Math.max(100, dataMax)
     }
+
+    private fun computeMaxSpeed(): Int =
+        (data!![2].points + data[3].points).map { it.y?.toInt() ?: 0 }.max() ?: 0
 
 }

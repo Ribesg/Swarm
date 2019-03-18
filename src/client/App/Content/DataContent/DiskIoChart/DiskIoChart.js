@@ -18,6 +18,7 @@ class DiskIoChart extends React.PureComponent {
             data: null,
             loading: true,
             maxUsage: null,
+            maxSpeed: null,
         };
         this.timer = null;
         this.request = null;
@@ -38,6 +39,7 @@ class DiskIoChart extends React.PureComponent {
                 data: null,
                 loading: true,
                 maxUsage: null,
+                maxSpeed: null,
             }, this._fetchDataNowAndResetTimer);
         }
     }
@@ -53,7 +55,7 @@ class DiskIoChart extends React.PureComponent {
 
     render() {
         const {selectedMode} = this.props;
-        const {data, loading, maxUsage} = this.state;
+        const {data, loading, maxUsage, maxSpeed} = this.state;
         if (loading) {
             return (
                 <div id="disk-io-chart" className="empty">
@@ -78,6 +80,7 @@ class DiskIoChart extends React.PureComponent {
                         y0MaxTickTextWidth={4}
                         y0TickFormat={d => roundWithMaxDecimals(d, 1) + "%"}
                         y0Title="Usage"
+                        y1Domain={[0, maxSpeed]}
                         y1MaxTickTextWidth={9}
                         y1TickFormat={this._formatY1AxisLabel}
                         y1Title="Speed"
@@ -116,6 +119,7 @@ class DiskIoChart extends React.PureComponent {
             this.setState({
                 data: data["data"],
                 maxUsage: data["maxUsage"],
+                maxSpeed: data["maxSpeed"],
             });
         }
     }
