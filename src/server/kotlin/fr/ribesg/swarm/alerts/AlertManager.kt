@@ -233,6 +233,13 @@ object AlertManager {
             registerAlert(host, type, alert, true)
             alertEvents.add(AlertEvent(alert, DE_ESCALATED))
         }
+        if (type == NOT_REPORTING && currentAlertLevel == CRITICAL && newAlertLevel == CRITICAL) {
+            if (currentAlert.date < date - 60 * 60 * 1000) {
+                val alert = Alert(host, currentAlert.date, type, newAlertLevel, message!!)
+                registerAlert(host, type, alert, true)
+                alertEvents.add(AlertEvent(alert, ESCALATED))
+            }
+        }
         if (newAlertLevel == NONE) {
             // currentAlertLevel is CRITICAL or WARNING
             removeAlert(host, type)
