@@ -1,9 +1,12 @@
 package fr.ribesg.swarm.alerts
 
-import `in`.ashwanthkumar.slack.webhook.*
+import `in`.ashwanthkumar.slack.webhook.Slack
+import `in`.ashwanthkumar.slack.webhook.SlackAttachment
 import fr.ribesg.swarm.Log
 import fr.ribesg.swarm.alerts.AlertEventType.*
 import fr.ribesg.swarm.alerts.AlertLevel.*
+import java.time.Instant
+import java.time.temporal.ChronoUnit.HOURS
 import java.util.HashMap
 import kotlin.Comparator
 
@@ -33,9 +36,9 @@ object SlackAlertLogger {
     private lateinit var slack: Slack
 
     /**
-     * If an alert is currently logged on Slack
+     * If an alert is currently logged on Slack, the date at which it was logged
      */
-    private val loggedAlerts: MutableMap<String, MutableMap<AlertType, Boolean>> = HashMap()
+    private val loggedAlerts: MutableMap<String, MutableMap<AlertType, Long>> = HashMap()
 
     /**
      * Initializes the logger.
@@ -87,16 +90,20 @@ object SlackAlertLogger {
                 .filter { alertEvent ->
                     val host = alertEvent.alert.host
                     val type = alertEvent.alert.type
-                    val current = loggedAlerts[host]?.get(type) ?: false
+                    val current = loggedAlerts[host]?.get(type)
                     when (alertEvent.type) {
                         STARTED -> {
-                            loggedAlerts.getOrPut(host) { HashMap() }[type] = true
-                            alertEvent.alert.type == AlertType.NOT_REPORTING || !current
+                            loggedAlerts.getOrPut(host) { HashMap() }[type] = Instant.now().toEpochMilli()
+                            if (type == AlertType.NOT_REPORTING) {
+                                current == null || current < Instant.now().minus(1, HOURS).toEpochMilli()
+                            } else {
+                                current == null
+                            }
                         }
 
                         ENDED   -> {
-                            loggedAlerts[host]!![type] = false
-                            current
+                            loggedAlerts[host]!!.remove(type)
+                            current != null
                         }
 
                         else    -> {

@@ -87,9 +87,6 @@ object AlertManager {
             date = mostRecentLiveDatumDate
             alertLevel = WARNING
         }
-        if (alertLevel >= WARNING) {
-            log.debug("Server $host not reporting: date=$date")
-        }
         val message =
             when {
                 alertLevel == NONE     -> "Report received ${(now - date) / 1000} seconds ago"
@@ -235,15 +232,6 @@ object AlertManager {
             val alert = Alert(host, currentAlert.date, type, newAlertLevel, message!!)
             registerAlert(host, type, alert, true)
             alertEvents.add(AlertEvent(alert, DE_ESCALATED))
-        }
-        if (type == NOT_REPORTING && currentAlertLevel == CRITICAL && newAlertLevel == CRITICAL) {
-            log.debug("Server $host still not reporting: currentAlert.date=${currentAlert.date} < date - 60 * 60 * 1000 (${date - 60 * 60 * 1000})?")
-            if (currentAlert.date < date - 60 * 60 * 1000) {
-                log.debug("Registering new not reporting alert")
-                val alert = Alert(host, currentAlert.date, type, newAlertLevel, message!!)
-                registerAlert(host, type, alert, true)
-                alertEvents.add(AlertEvent(alert, ESCALATED))
-            }
         }
         if (newAlertLevel == NONE) {
             // currentAlertLevel is CRITICAL or WARNING
