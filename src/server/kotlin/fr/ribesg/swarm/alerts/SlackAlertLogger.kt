@@ -91,7 +91,7 @@ object SlackAlertLogger {
                     when (alertEvent.type) {
                         STARTED -> {
                             loggedAlerts.getOrPut(host) { HashMap() }[type] = true
-                            !current
+                            alertEvent.alert.type == AlertType.NOT_REPORTING || !current
                         }
 
                         ENDED   -> {
